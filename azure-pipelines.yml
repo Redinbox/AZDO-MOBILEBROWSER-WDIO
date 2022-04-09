@@ -27,17 +27,17 @@ steps:
     script: |
       #!/usr/bin/env bash
       env
-      echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-25;google_apis;x86'
+      echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-30;google_apis;x86'
       touch ~/.android/repositories.cfg
       $ANDROID_HOME/platform-tools/adb devices
       adb devices | grep "emulator-" | while read -r emulator device; do adb -s $emulator emu kill; done
       adb kill-server
-      $ANDROID_HOME/tools/bin/avdmanager delete avd -n Nexus 5 API 30
+      $ANDROID_HOME/tools/bin/avdmanager delete avd -n Nexus_5_API_30
       echo 'deleted'
       $ANDROID_HOME/platform-tools/adb devices
       echo 'Devices/n'+$ANDROID_HOME/platform-tools/adb devices
-      echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n Nexus 5 API 30 -k 'system-images;android-25;google_apis;x86' --force
-      nohup $ANDROID_HOME/emulator/emulator -memory 2500 -avd Nexus 5 API 30 -skin 768x1280 -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+      echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n Nexus_5_API_30 -k 'system-images;android-25;google_apis;x86' --force
+      nohup $ANDROID_HOME/emulator/emulator -memory 2500 -avd Nexus_5_API_30 -skin 768x1280 -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
       echo "Emulator started"
     failOnStderr: true
   displayName: 'Emulator setup'
