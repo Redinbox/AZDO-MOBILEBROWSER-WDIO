@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Test browser navigation" timestamp="2022-04-09T14:11:59" time="32.364" tests="1" failures="1" errors="1" skipped="0">
+    <properties>
+      <property name="specId" value="0"/>
+      <property name="suiteName" value="Test browser navigation"/>
+      <property name="capabilities" value="emulator-5554.android.11"/>
+      <property name="file" value="./test/specs/test.spec.ts"/>
+    </properties>
+    <testcase classname="emulator-5554.android.11.Test_browser_navigation" name="Verify navigation url" time="32.357">
+      <failure/>
+      <error message="Title is same as expected      &#xA;      actual expected&#xA;      &#xA;      'amazon.comAmazon'&#xA;      "/>
+      <system-out><![CDATA[
+COMMAND: POST /session/ebdfca90-2366-4ea7-b538-a7a823a9bfb1/url - {"url":"https://amazon.com/"}
+RESULT: {"url":"https://amazon.com/"}
+COMMAND: POST /session/ebdfca90-2366-4ea7-b538-a7a823a9bfb1/timeouts - {"pageLoad":99999999}
+RESULT: {"pageLoad":99999999}
+COMMAND: GET /session/ebdfca90-2366-4ea7-b538-a7a823a9bfb1/title - {}
+RESULT: {}
+COMMAND: GET /session/ebdfca90-2366-4ea7-b538-a7a823a9bfb1/screenshot - {}
+RESULT: {}
+COMMAND: GET /session/ebdfca90-2366-4ea7-b538-a7a823a9bfb1/screenshot - {}
+RESULT: {}
+COMMAND: DELETE /session/ebdfca90-2366-4ea7-b538-a7a823a9bfb1 - {}
+RESULT: {}
+]]></system-out>
+      <system-err><![CDATA[
+AssertionError [ERR_ASSERTION]: Title is same as expected
+    at /Users/ravi.chintakunta/webdriverio-azuredevops-mobilebrowser/test/specs/test.spec.ts:28:24
+    at Generator.next (<anonymous>)
+    at fulfilled (/Users/ravi.chintakunta/webdriverio-azuredevops-mobilebrowser/test/specs/test.spec.ts:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+]]></system-err>
+    </testcase>
+  </testsuite>
+</testsuites>
