@@ -21,7 +21,6 @@ steps:
   displayName: 'npm install and build'
 - bash: |
     npm install -g appium
-    brew cask install android-sdk
   displayName: 'Install appium'
 - task: CmdLine@2
   inputs:
