@@ -22,8 +22,6 @@ steps:
 - bash: |
     npm install -g appium
     brew install --cask android-sdk
-    flutter doctor
-    flutter doctor --android-licenses
   displayName: 'Install appium'
 - task: CmdLine@2
   inputs:
