@@ -1,0 +1,4 @@
+#node modules and reports
+node_modules
+report
+package-lock.json

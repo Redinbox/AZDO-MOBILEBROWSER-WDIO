@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "ES2015",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "baseUrl": ".",
+        "paths": {
+            "*": [ "./*" ]
+        },
+        "types": ["node", "webdriverio/async", "@wdio/mocha-framework","./types/wdio"]
+    },
+    "include": [
+        "./.eslintrc.js",
+        "./config/**/*.ts",
+        "./test/*/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
