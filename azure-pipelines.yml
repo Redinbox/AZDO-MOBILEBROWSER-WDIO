@@ -8,7 +8,7 @@ trigger:
 - main
 
 pool:
-  vmImage: macos-latest
+  vmImage: ubantu-latest
 
 steps:
 - task: NodeTool@0
