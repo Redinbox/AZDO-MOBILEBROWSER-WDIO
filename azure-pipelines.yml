@@ -1,4 +1,5 @@
 # Node.js
+
 # Build a general Node.js project with npm.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
@@ -18,6 +19,21 @@ steps:
 - script: |
     npm install
   displayName: 'npm install and build'
+- task: CmdLine@2
+  inputs:
+    script: |
+      #!/usr/bin/env bash
+      env
+      echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-25;google_apis;x86'
+      $ANDROID_HOME/platform-tools/adb devices
+      adb devices | grep "emulator-" | while read -r emulator device; do adb -s $emulator emu kill; done
+      adb kill-server
+      $ANDROID_HOME/tools/bin/avdmanager delete avd -n test_android_emulator
+      $ANDROID_HOME/platform-tools/adb devices
+      echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n test_android_emulator -k 'system-images;android-25;google_apis;x86' --force
+      nohup $ANDROID_HOME/emulator/emulator -memory 2500 -avd test_android_emulator -skin 768x1280 -no-snapshot > /dev/null 2>&1 & $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+      echo "Emulator started"
+  displayName: 'Emulator setup'
 - script: |
     npm run testandroidbrowser
   continueOnError: true
