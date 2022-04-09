@@ -29,13 +29,12 @@ steps:
       env
       touch ~/.android/repositories.cfg
       echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "platforms;android-23" "build-tools;23.0.1" "add-ons;addon-google_apis-google-23"
-      echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-25./;'l';google_apis;x86'
+      echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-25;'l';google_apis;x86'
       echo $sdkmanager --list
       sdkmanager "emulator"
       $ANDROID_HOME/platform-tools/adb devices
       adb devices | grep "emulator-" | while read -r emulator device; do adb -s $emulator emu kill; done
       adb kill-server
-      
       echo 'deleted'
       echo $ANDROID_HOME/platform-tools/adb devices
       echo 'Devices/n'+ $ANDROID_HOME/platform-tools/adb devices
