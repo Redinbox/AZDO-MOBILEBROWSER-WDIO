@@ -10,14 +10,29 @@ describe("Test browser navigation", async () => {
     await browser.setTimeout({ pageLoad: 99999999 });
   });
 
-  it("Verify navigation url", async () => {
+  it("Verify Title of the page-not ", async () => {
     try {
       const isMobile = driver.isMobile;
 
       if (isMobile) {
         var title = await browser.getTitle();
         console.log(title);
-        assert.strictEqual(title, "Amazon", "Title is same as expected");
+        assert.strictEqual(title, "Amazon", "Title is not same as expected");
+        log.info("verify mobile browser");
+      }
+    } catch (e) {
+      console.log("error: " + e.message);
+      throw e;
+    }
+  });
+  it("Verify Title of the page ", async () => {
+    try {
+      const isMobile = driver.isMobile;
+
+      if (isMobile) {
+        var title = await browser.getTitle();
+        console.log(title);
+        assert.strictEqual(title, "Dombey and Son - Kobo Web Reader", "Title is same as expected");
         log.info("verify mobile browser");
       }
     } catch (e) {
