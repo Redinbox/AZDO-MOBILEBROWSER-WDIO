@@ -39,6 +39,7 @@ steps:
 
 - script: |
     npm install
+    npm install -g appium
   displayName: 'npm install and build'
 - script: |
     npm run testandroidbrowser
