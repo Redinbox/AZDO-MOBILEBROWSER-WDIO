@@ -49,7 +49,7 @@ steps:
 - task: PublishTestResults@2
   displayName: 'Publish Test Results'
   inputs:
-    testResultsFiles: '/wr-results.xml'
+    testResultsFiles: '/junit-results.xml'
     searchFolder: '$(System.DefaultWorkingDirectory)/**/output'
     testRunTitle: 'WDIO Test results'
     failTaskOnFailedTests: true
