@@ -8,7 +8,7 @@ trigger:
 - main
 
 pool:
-  vmImage: macOS-11
+  vmImage: ubuntu-latest
 
 steps:
 - task: CacheBeta@0
