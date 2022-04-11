@@ -38,6 +38,14 @@ exports.config = {
         outputFileFormat: function (opts) {
           return `test-results.xml`;
         },
+        errorOptions: {
+                error: 'message',
+                failure: 'message',
+                stacktrace: 'stack',
+            },
+            linkScreenshots: true,
+            attachments: true,
+            outputs: true
       },
     ],
   ],
