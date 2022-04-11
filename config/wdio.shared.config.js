@@ -36,7 +36,7 @@ exports.config = {
       {
         outputDir: "./output/",
         outputFileFormat: function (opts) {
-          return `junit-results.xml`;
+          return `test-results.xml`;
         },
       },
     ],
@@ -45,7 +45,7 @@ exports.config = {
   maxInstances: 1,
   connectionRetryCount: 3,
 
-  baseUrl: "https://amazon.com/",
+  baseUrl: "https://rakuten.com/",
 
   services: [
     [
