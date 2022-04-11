@@ -32,7 +32,7 @@ describe("Test browser navigation", async () => {
       if (isMobile) {
         var title = await browser.getTitle();
         console.log(title);
-        assert.strictEqual(title, "Dombey and Son - Kobo Web Reader", "Title is same as expected");
+        assert.strictEqual(title, "Dombey and Son", "Title is same as expected");
         log.info("verify mobile browser");
       }
     } catch (e) {
