@@ -20,6 +20,7 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 - bash: |
+    touch ~/.android/repositories.cfg
     echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis;x86'
   displayName: 'Download and install emulator image'
   condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
