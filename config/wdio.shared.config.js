@@ -53,7 +53,7 @@ exports.config = {
   maxInstances: 1,
   connectionRetryCount: 3,
 
-  baseUrl: "https://rakuten.com/",
+  baseUrl: "https://web-reader.azurewebsites.net/",
 
   services: [
     [
