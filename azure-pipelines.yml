@@ -24,10 +24,11 @@ steps:
   displayName: 'Download and install emulator image'
   condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
 - bash: |
-    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n android_emulator -k 'system-images;android-28;google_apis;x86' -d 9 --force
+    echo $ANDROID_HOME/tools/bin/avdmanager list device
+    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n Nexus_5X_API_30 -k 'system-images;android-28;google_apis;x86' -d 9 --force
     echo "Emulator created successfully $(ANDROID_HOME/emulator/emulator -list-avds), launching it"
-    echo $(ANDROID_HOME/emulator/emulator -list-avds)
-    nohup $ANDROID_HOME/emulator/emulator -avd android_emulator -skin 1080x1920 -no-snapshot -no-audio -no-boot-anim -accel auto -gpu auto -qemu -lcd-density 420 > /dev/null 2>&1 &
+    echo $ANDROID_HOME/tools/bin/avdmanager list device
+    nohup $ANDROID_HOME/emulator/emulator -avd Nexus_5X_API_30 -skin 1080x1920 -no-snapshot -no-audio -no-boot-anim -accel auto -gpu auto -qemu -lcd-density 420 > /dev/null 2>&1 &
     $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done'
     $ANDROID_HOME/platform-tools/adb devices
     echo "Emulator started"
