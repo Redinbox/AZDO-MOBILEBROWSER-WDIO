@@ -60,6 +60,7 @@ steps:
     targetType: 'inline'
     script: |
       $AzureDevOpsPAT = '$(System.AccessToken)'
+      echo 'PAT /n'+$AzureDevOpsPAT
       $AzureDevOpsAuthenicationHeader = @{Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($AzureDevOpsPAT)")) }
       echo 'header /n ' $AzureDevOpsAuthenicationHeader
       $UriOrga = "https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/" 
