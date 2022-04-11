@@ -94,7 +94,7 @@ steps:
       $TestName =$TestTitle
       echo 'testname/n'+$TestName
 
-      $file= [IO.File]::ReadAllBytes("$(System.DefaultWorkingDirectory)/pscreenshots/TESTFAIL.png")
+      $file= [IO.File]::ReadAllBytes("$(System.DefaultWorkingDirectory)/jscreenshots/TESTFAIL.png")
       $Base64file= [Convert]::ToBase64String($file)
 
       #Add attachment via test run ID and test result ID
