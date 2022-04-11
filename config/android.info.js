@@ -1,6 +1,6 @@
 class AndroidInfo {
     static deviceName() {
-        return 'Nexus_5_API_30';
+        return 'Nexus_5X';
     }
 
     static platFormVersion() {
