@@ -40,41 +40,9 @@ steps:
 - script: npm install
   displayName: Install Package From NPM
 - script: |
-    npm install
-    npm install -g appium
-  displayName: 'npm install and build'
-- script: |
-    npm run testandroidbrowser
+    npm run testiOS
   continueOnError: true
-  displayName: 'Run android mobile tests'
-- bash: |
-    touch ~/.android/repositories.cfg
-    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis;x86'
-  displayName: 'Download and install emulator image'
-  condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
-- bash: |
-    echo $ANDROID_HOME/tools/bin/avdmanager list device
-    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n Nexus_5X_API_30 -k 'system-images;android-28;google_apis;x86' -d 9 --force
-    echo "Emulator created successfully $(ANDROID_HOME/emulator/emulator -list-avds), launching it"
-    echo $ANDROID_HOME/tools/bin/avdmanager list device
-    nohup $ANDROID_HOME/emulator/emulator -avd Nexus_5X_API_30 -skin 1080x1920 -no-snapshot -no-audio -no-boot-anim -accel auto -gpu auto -qemu -lcd-density 420 > /dev/null 2>&1 &
-    $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done'
-    $ANDROID_HOME/platform-tools/adb devices
-    echo "Emulator started"
-  displayName: 'Create and start emulator'
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install
-    npm install -g appium
-  displayName: 'npm install and build'
-- script: |
-    npm run testandroidbrowser
-  continueOnError: true
-  displayName: 'Run android mobile tests'
+  displayName: 'Run ios mobile tests'
 - task: PublishTestResults@2
   displayName: 'Publish Test Results'
   inputs:
