@@ -1,0 +1,31 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: "macOS-10.15"
+
+steps:
+- task: Xcode@5
+  displayName: 'Running tests'
+  inputs:
+    actions: 'test'
+    sdk: 'iphonesimulator'
+    configuration: 'Debug'
+    xcodeVersion: 'default'
+    useXcpretty: true
+    publishJUnitResults: true
+    args: '-destination "platform=iOS Simulator,name=iPad Air (4th generation)"'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
