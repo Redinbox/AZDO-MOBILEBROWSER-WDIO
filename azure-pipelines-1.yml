@@ -10,15 +10,43 @@ trigger:
 pool:
   vmImage: macOS-11
 
+variables:
+  scheme: 'mytest'
+  sdk: 'iphoneos'
+  configuration: 'Debug'
 steps:
-- task: CacheBeta@0
-  displayName: 'Caching System Images for AVD'
+- task: Xcode@5
+  displayName: 'Running XCTest/XCUITest'
   inputs:
-    key: 'AVD_IMAGES_PIXEL_28'
-    path: '$(ANDROID_HOME)/system-images'
-    cacheHitVar: 'AVD_IMAGES_RESTORED'
+    actions: 'test'
+    scheme: '$(scheme)'
+    sdk: 'iphonesimulator'
+    configuration: '$(configuration)'
+    xcodeVersion: 'default' # Options: 8, 9, default, specifyPath
+    destinationSimulators: 'iPhone 7'
+    destinationTypeOption: 'simulators'
+    destinationPlatformOption: 'iOS'
+    signingOption: "auto"
+    useXcpretty: true
+- task: NodeTool@0
+  inputs:
+    versionSpec: "$(DEFAULT_NODE_VERSION)"
+- script: ls /Applications
+  displayName: List Apps
+- script: sudo xcode-select --switch "/Applications/Xcode_$(XCODE_VERSION).app/Contents/Developer"
+  displayName: Prepare Env
+- script: xcrun simctl list
+  displayName: List Simulators
+- script: npm install
+  displayName: Install Package From NPM
+- script: |
+    npm install
+    npm install -g appium
+  displayName: 'npm install and build'
+- script: |
+    npm run testandroidbrowser
   continueOnError: true
-  condition: succeededOrFailed()
+  displayName: 'Run android mobile tests'
 - bash: |
     touch ~/.android/repositories.cfg
     echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis;x86'
