@@ -1,4 +1,5 @@
 # Node.js
+
 # Build a general Node.js project with npm.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
@@ -7,15 +8,109 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: macOS-11
 
 steps:
+- task: CacheBeta@0
+  displayName: 'Caching System Images for AVD'
+  inputs:
+    key: 'AVD_IMAGES_PIXEL_28'
+    path: '$(ANDROID_HOME)/system-images'
+    cacheHitVar: 'AVD_IMAGES_RESTORED'
+  continueOnError: true
+  condition: succeededOrFailed()
+- bash: |
+    touch ~/.android/repositories.cfg
+    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis;x86'
+  displayName: 'Download and install emulator image'
+  condition: ne(variables.AVD_IMAGES_RESTORED, 'true')
+- bash: |
+    echo $ANDROID_HOME/tools/bin/avdmanager list device
+    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n Nexus_5X_API_30 -k 'system-images;android-28;google_apis;x86' -d 9 --force
+    echo "Emulator created successfully $(ANDROID_HOME/emulator/emulator -list-avds), launching it"
+    echo $ANDROID_HOME/tools/bin/avdmanager list device
+    nohup $ANDROID_HOME/emulator/emulator -avd Nexus_5X_API_30 -skin 1080x1920 -no-snapshot -no-audio -no-boot-anim -accel auto -gpu auto -qemu -lcd-density 420 > /dev/null 2>&1 &
+    $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done'
+    $ANDROID_HOME/platform-tools/adb devices
+    echo "Emulator started"
+  displayName: 'Create and start emulator'
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '16.x'
   displayName: 'Install Node.js'
 
 - script: |
     npm install
-    npm run build
+    npm install -g appium
   displayName: 'npm install and build'
+- script: |
+    npm run testandroidbrowser
+  continueOnError: true
+  displayName: 'Run android mobile tests'
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results'
+  inputs:
+    testResultsFiles: 'test-results.xml'
+    searchFolder: '$(System.DefaultWorkingDirectory)/output'
+    testRunTitle: 'WDIO Test results'
+    failTaskOnFailedTests: true
+  continueOnError: true
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $AzureDevOpsPAT = '$(System.AccessToken)'
+      echo 'PAT /n'+$AzureDevOpsPAT
+      $AzureDevOpsAuthenicationHeader = @{Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($AzureDevOpsPAT)")) }
+      echo 'header /n ' $AzureDevOpsAuthenicationHeader
+      $UriOrga = "https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/" 
+      $uriAccount = $UriOrga + "_apis/test/runs?api-version=6.0"
+      $response = Invoke-RestMethod -Uri $uriAccount -Headers $AzureDevOpsAuthenicationHeader -Method Get
+      echo 'resonse value/n'+ $response.value
+      $testRunsIdSorted = $response.value | sort-object id -Descending
+      echo 'test runs id sorted /n'+ $testRunsIdSorted
+      echo 'test runs id sorted /n'+ $testRunsIdSorted[0].id
+      $result = Invoke-RestMethod -Uri https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/_apis/test/runs/$($testRunsIdSorted[0].id)?api-version=6.0 -Headers $AzureDevOpsAuthenicationHeader -Method Get
+      Write-Host "results = $($result | ConvertTo-Json -Depth 100)"
+      Write-Host "##vso[task.setvariable variable=runId]$($result.id | ConvertTo-Json -Depth 100)"
+      echo 'results value/n'+$result.value
+  continueOnError: true
+  displayName: Get Test Run ID
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $AzureDevOpsPAT = '$(System.AccessToken)'
+      $AzureDevOpsAuthenicationHeader = @{Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($AzureDevOpsPAT)")) }
+      $result = Invoke-RestMethod -Uri https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/_apis/test/runs/$(runId)/results?api-version=6.0 -Headers $AzureDevOpsAuthenicationHeader -Method Get
+
+      #List all test result  get the test result ID via result
+      foreach($Run in $result.value){
+
+      #Get the test result ID via result
+      If($Run.outcome -eq "Failed"){
+      $TestResultID = $Run.id
+      $TestTitle=$Run.testCase.name
+      $TestName =$TestTitle
+      echo 'testname/n'+$TestName
+
+      $file= [IO.File]::ReadAllBytes("$(System.DefaultWorkingDirectory)/jscreenshots/TESTFAIL.png")
+      $Base64file= [Convert]::ToBase64String($file)
+
+      #Add attachment via test run ID and test result ID
+      $TestResultAttachmentURL = "https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/_apis/test/Runs/$(runId)/results/$($TestResultID)/attachments?api-version=6.0-preview.1" 
+      echo '$TestResultAttachmentURL/n'+$TestResultAttachmentURL 
+      $body =@"
+      {
+        "stream": "$Base64file",
+        "fileName": "TESTFAIL.png",
+        "comment": "Test attachment upload",
+        "attachmentType": "GeneralAttachment"
+      }
+      "@
+      $TestResultAttachmentResult = Invoke-RestMethod -Uri $TestResultAttachmentURL -ContentType "application/json" -Body $body -Headers $AzureDevOpsAuthenicationHeader -Method POST
+      echo 'final out/n' + $TestResultAttachmentResult
+      }
+      }
+  displayName: Attaching sreenshots
