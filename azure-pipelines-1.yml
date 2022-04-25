@@ -17,7 +17,8 @@ variables:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: "16"
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
 - script: ls /Applications
   displayName: List Apps
 - script: sudo xcode-select --switch "/Applications/Xcode_13.2.app/Contents/Developer"
