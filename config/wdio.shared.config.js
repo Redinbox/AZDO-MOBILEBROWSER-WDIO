@@ -53,7 +53,7 @@ exports.config = {
   maxInstances: 1,
   connectionRetryCount: 3,
 
-  baseUrl: "https://web-reader.azurewebsites.net/",
+  baseUrl: "https://www.goodreads.com",
 
   services: [
     [

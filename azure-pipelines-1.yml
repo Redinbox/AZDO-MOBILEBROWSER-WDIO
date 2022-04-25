@@ -23,7 +23,7 @@ steps:
     sdk: 'iphonesimulator'
     configuration: '$(configuration)'
     xcodeVersion: 'default' # Options: 8, 9, default, specifyPath
-    destinationSimulators: 'iPhone 7'
+    destinationSimulators: 'iPhone 11'
     destinationTypeOption: 'simulators'
     destinationPlatformOption: 'iOS'
     signingOption: "auto"
@@ -33,7 +33,7 @@ steps:
     versionSpec: "$(DEFAULT_NODE_VERSION)"
 - script: ls /Applications
   displayName: List Apps
-- script: sudo xcode-select --switch "/Applications/Xcode_$(XCODE_VERSION).app/Contents/Developer"
+- script: sudo xcode-select --switch "/Applications/Xcode_12.3.app/Contents/Developer"
   displayName: Prepare Env
 - script: xcrun simctl list
   displayName: List Simulators
@@ -92,7 +92,7 @@ steps:
       echo 'PAT /n'+$AzureDevOpsPAT
       $AzureDevOpsAuthenicationHeader = @{Authorization = 'Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($AzureDevOpsPAT)")) }
       echo 'header /n ' $AzureDevOpsAuthenicationHeader
-      $UriOrga = "https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/" 
+      $UriOrga = "https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/"
       $uriAccount = $UriOrga + "_apis/test/runs?api-version=6.0"
       $response = Invoke-RestMethod -Uri $uriAccount -Headers $AzureDevOpsAuthenicationHeader -Method Get
       echo 'resonse value/n'+ $response.value
@@ -127,8 +127,8 @@ steps:
       $Base64file= [Convert]::ToBase64String($file)
 
       #Add attachment via test run ID and test result ID
-      $TestResultAttachmentURL = "https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/_apis/test/Runs/$(runId)/results/$($TestResultID)/attachments?api-version=6.0-preview.1" 
-      echo '$TestResultAttachmentURL/n'+$TestResultAttachmentURL 
+      $TestResultAttachmentURL = "https://dev.azure.com/ravieinbox/WDIO-CI-AZURE/_apis/test/Runs/$(runId)/results/$($TestResultID)/attachments?api-version=6.0-preview.1"
+      echo '$TestResultAttachmentURL/n'+$TestResultAttachmentURL
       $body =@"
       {
         "stream": "$Base64file",
