@@ -27,6 +27,9 @@ steps:
 - script: npm install
   displayName: Install Package From NPM
 - script: |
+    npm install -g appium
+  displayName: 'npm appium'
+- script: |
     npm run testiOS
   continueOnError: true
   displayName: 'Run ios mobile tests'
