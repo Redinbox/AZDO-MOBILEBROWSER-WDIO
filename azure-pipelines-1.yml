@@ -20,7 +20,7 @@ steps:
     versionSpec: "16"
 - script: ls /Applications
   displayName: List Apps
-- script: sudo xcode-select --switch "/Applications/Xcode_12.3.app/Contents/Developer"
+- script: sudo xcode-select --switch "/Applications/Xcode_13.2.app/Contents/Developer"
   displayName: Prepare Env
 - script: xcrun simctl list
   displayName: List Simulators
