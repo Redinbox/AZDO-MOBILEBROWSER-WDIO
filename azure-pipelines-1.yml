@@ -15,19 +15,9 @@ variables:
   sdk: 'iphoneos'
   configuration: 'Debug'
 steps:
-- task: Xcode@5
-  displayName: 'Running XCTest/XCUITest'
-  inputs:
-    actions: 'test'
-    xcodeVersion: 'default' # Options: 8, 9, default, specifyPath
-    destinationSimulators: 'iPhone 11'
-    destinationTypeOption: 'simulators'
-    destinationPlatformOption: 'iOS'
-    signingOption: "auto"
-    useXcpretty: true
 - task: NodeTool@0
   inputs:
-    versionSpec: "$(DEFAULT_NODE_VERSION)"
+    versionSpec: "16"
 - script: ls /Applications
   displayName: List Apps
 - script: sudo xcode-select --switch "/Applications/Xcode_12.3.app/Contents/Developer"
