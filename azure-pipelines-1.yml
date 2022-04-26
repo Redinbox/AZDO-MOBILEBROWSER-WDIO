@@ -18,13 +18,13 @@ steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '16.x'
-  displayName: 'Install Node.js'
-- script: xcrun simctl upgrade
-  displayName: upgrading xcrun  
+  displayName: 'Install Node.js' 
 - script: ls /Applications
   displayName: List Apps
-- script: sudo xcode-select --switch "/Applications/Xcode_13.2.app/Contents/Developer"
+- script: sudo xcode-select --switch "/Applications/Xcode_13.2.1.app/Contents/Developer"
   displayName: Prepare Env
+- script: xcrun simctl list runtimes
+  displayName: xcrun simctl list runtimes
 - script: xcrun simctl list
   displayName: List Simulators
 - script: npm install
