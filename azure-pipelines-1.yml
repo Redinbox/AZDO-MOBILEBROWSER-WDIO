@@ -19,6 +19,8 @@ steps:
   inputs:
     versionSpec: '16.x'
   displayName: 'Install Node.js'
+- script: xcrun simctl upgrade
+  displayName: upgrading xcrun  
 - script: ls /Applications
   displayName: List Apps
 - script: sudo xcode-select --switch "/Applications/Xcode_13.2.app/Contents/Developer"
